@@ -11,17 +11,25 @@ def main():
     answer = sum(Y) / len(Y)
 
     n = 0
-    min_arg_1 = minimize_func_1(f, min(Y), max(Y))
-    print(abs(answer - min_arg_1))
+    min_arg = minimize_func_1(f, min(Y), max(Y))
+    print(abs(answer - min_arg))
     print(n)
 
     n = 0
-    min_arg_2 = minimize_func_2(f, min(Y), max(Y))
-    print(abs(answer - min_arg_2))
+    min_arg = minimize_func_2(f, min(Y), max(Y))
+    print(abs(answer - min_arg))
+    print(n)
+
+    n = 0
+    min_arg = minimize_func_3(f, min(Y), max(Y))
+    print(abs(answer - min_arg))
     print(n)
 
 
 def minimize_func_1(f: Callable[[float], float], a: float, b: float) -> float:
+    """
+    Алгоритм линейного поиска.
+    """
     x = a
     fx = f(x)
     h = (b - a) / 1000
@@ -37,6 +45,9 @@ def minimize_func_1(f: Callable[[float], float], a: float, b: float) -> float:
 
 
 def minimize_func_2(f: Callable[[float], float], a: float, b: float) -> float:
+    """
+    Алгоритм деления отрезка на три части.
+    """
     while EPS <= (b - a):
         x1 = a * 2 / 3 + b / 3
         x2 = a / 3 + b * 2 / 3
@@ -46,6 +57,70 @@ def minimize_func_2(f: Callable[[float], float], a: float, b: float) -> float:
             b = x2
         else:
             a = x1
+    return (a + b) / 2
+
+
+def minimize_func_3(f: Callable[[float], float], a: float, b: float) -> float:
+    """
+    Алгоритм золотого сечения.
+    """
+    lmbd = (3 - 5 ** 0.5) / 2
+    x1 = a * (1 - lmbd) + b * lmbd
+    x2 = a * lmbd + b * (1 - lmbd)
+    f1 = f(x1)
+    f2 = f(x2)
+
+    while EPS <= (b - a):
+        if f1 < f2:
+            b = x2
+            x2 = x1
+            x1 = a * (1 - lmbd) + b * lmbd
+            f2 = f1
+            f1 = f(x1)
+        else:
+            a = x1
+            x1 = x2
+            x2 = a * lmbd + b * (1 - lmbd)
+            f1 = f2
+            f2 = f(x2)
+
+    return (a + b) / 2
+
+
+def minimize_func_4(f: Callable[[float], float], a: float, b: float) -> float:
+    """
+    Алгоритм парабол.
+    """
+    lmbd = (3 - 5 ** 0.5) / 2
+    x1 = a * (1 - lmbd) + b * lmbd
+    fa = f(a)
+    fb = f(b)
+    f1 = f(x1)
+    x2 = min_of_parabol(a, fa, b, fb, x1, f1)
+    f2 = f(x2)
+    if x1 < x2:
+        x1, x2 = x2, x1
+        f1, f2 = f2, f1
+
+    while EPS <= (b - a):
+        if f1 < f2:
+            b = x2
+            fb = f2
+            f2 = f1
+            x2 = x1
+            x1 = min_of_parabol(a, fa, b, fb, x2, f2)
+            f1 = f(x1)
+        else:
+            a = x1
+            fa = f1
+            f1 = f2
+            x1 = x2
+            x2 = min_of_parabol(a, fa, b, fb, x1, f1)
+            f2 = f(x2)
+        if x1 < x2:
+            x1, x2 = x2, x1
+            f1, f2 = f2, f1
+
     return (a + b) / 2
 
 
