@@ -10,7 +10,7 @@ def main():
     global n
 
     n = 0
-    min_arg = minimize(f)
+    min_arg = minimize_1d(f)
     print(min_arg)
     print(f(min_arg))
     print(n)
@@ -46,12 +46,12 @@ x0 -= 0.1 * d
 x1 += 0.1 * d
 
 
-def minimize(f: Callable[[float], float]) -> float:
+def minimize_1d(f: Callable[[float], float]) -> float:
     min_x = 0
     min_f = f(min_x)
     for i in range(7):
         x = random.gauss(0, 100)
-        x = minimize1(f, x)
+        x = minimize_1d_from_point(f, x)
         f_x = f(x)
         if f_x < min_f:
             min_x = x
@@ -59,7 +59,7 @@ def minimize(f: Callable[[float], float]) -> float:
     return min_x
 
 
-def minimize1(f: Callable[[float], float], x0: float) -> float:
+def minimize_1d_from_point(f: Callable[[float], float], x0: float) -> float:
     h = 0.001
     f_x0 = f(x0)
 
