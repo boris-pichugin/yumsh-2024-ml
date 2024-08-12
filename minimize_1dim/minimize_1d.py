@@ -30,6 +30,11 @@ def main():
     print(abs(answer - min_arg))
     print(n)
 
+    n = 0
+    min_arg = minimize_grad(f, min(Y), max(Y))
+    print(abs(answer - min_arg))
+    print(n)
+
 
 def minimize_1d_from_point(f: Callable[[float], float], x0: float, steps: int = 1000, accuracy: float = 1e-6) -> float:
     h = 0.001
@@ -182,6 +187,25 @@ def golden_sect_fallback(a, b, x):
         return p2
     else:
         return p1
+
+
+def minimize_grad(f: Callable[[float], float], a: float, b: float, steps: int = 1000, accuracy: float = EPS) -> float:
+    h = 0.0001
+    l = 1
+    moment = 0.5
+
+    x = (a + b) / 2
+
+    for _ in range(steps):
+        dfx = (f(x + h) - f(x - h)) / (2 * h)
+        x1 = x - l * dfx
+        x2 = moment * x + (1 - moment) * x1
+        x2 = max(min(x2, b), a)
+        if abs(x2 - x) < accuracy:
+            return x2
+        x = x2
+
+    return x
 
 
 n = 0
