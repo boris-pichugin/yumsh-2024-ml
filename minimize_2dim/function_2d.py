@@ -1,10 +1,10 @@
+import random
 from typing import Callable
 
-import seaborn as sns
-import random
 import matplotlib.pyplot as plt
+import seaborn as sns
 
-random.seed(3)
+random.seed(2)
 # Число локальных минимумов
 N = 5
 # ТОчки локальных минимумов
@@ -12,9 +12,13 @@ MX = [[random.random(), random.random()] for _ in range(N)]
 # Значения в точках локальных минимумов
 MZ = [random.random() * 0.3 for _ in range(N)]
 # Коэффициенты растяжения по осям в окрестности минимумов
-MK = [[random.random(), random.random()] for _ in range(N)]
+MK = [[[random.random(), random.random()], [random.random(), random.random()]] for _ in range(N)]
 # Масштаб графика
 M = 200
+
+for i in range(N):
+    a = (MK[i][0][1] + MK[i][1][0]) / 6
+    MK[i][0][1] = MK[i][1][0] = a
 
 
 def f(x: list[float]) -> float:
@@ -22,8 +26,15 @@ def f(x: list[float]) -> float:
     # return min(MZ[k] + dist(x, MX[k], MK[k]) for k in range(N)) + math.sin(x[0]*x[1]*5)
 
 
-def dist(x: list[float], y: list[float], c: list[float]) -> float:
-    return sum(c[k] * (x[k] - y[k]) ** 2 for k in range(len(x)))
+def dist(x: list[float], y: list[float], c: list[list[float]]) -> float:
+    s = 0
+    for i in range(len(x)):
+        d_i = x[i] - y[i]
+        for j in range(len(y)):
+            d_j = x[j] - y[j]
+            s += c[i][j] * d_i * d_j
+    # return sum(c[k] * (x[k] - y[k]) ** 2 for k in range(len(x)))
+    return s
 
 
 def draw_2d_function(f: Callable[[list[float]], float]) -> None:
