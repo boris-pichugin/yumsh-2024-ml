@@ -7,7 +7,7 @@ import minimize_2dim.function_2d as fun2d
 
 
 def main() -> None:
-    f = fun2d.f
+    f = fun2d.f3
 
     fun2d.draw_2d_function(f)
 
@@ -34,11 +34,20 @@ def minimize_2d(f: Callable[[list[float]], float], tries: int = 20, steps: int =
 def minimize_2d_from_point(f: Callable[[list[float]], float], x: list[float], steps: int = 1000):
     path = [x.copy()]
 
-    v = [0 for _ in range(len(x))]
-    for i in range(steps):
+    lr = 0.01
+    beta_1 = 0.9
+    beta_2 = 0.99
+    epsilon = 0.01
+
+    v = [0.0 for _ in range(len(x))]
+    q = [1.0 for _ in range(len(x))]
+    for _ in range(steps):
         g = grad(f, x)
-        v = linear_plus(0.6, v, 0.4, g)
-        x = linear_plus(1.0, x, -0.01, v)
+        for i in range(len(x)):
+            v[i] = beta_1 * v[i] + (1 - beta_1) * g[i]
+            q[i] = beta_2 * q[i] + (1 - beta_2) * (v[i] ** 2)
+            x[i] = x[i] - lr * v[i] / (epsilon + q[i] ** 0.5)
+
         path.append(x.copy())
 
     fun2d.draw_path(path)
@@ -56,12 +65,6 @@ def plus_xh(x: list[float], h: float, i: int) -> list[float]:
     xh = x.copy()
     xh[i] += h
     return xh
-
-
-def linear_plus(a: float, x: list[float], b: float, y: list[float]) -> list[float]:
-    for i in range(len(x)):
-        x[i] = a * x[i] + b * y[i]
-    return x
 
 
 if __name__ == '__main__':

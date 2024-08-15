@@ -28,11 +28,11 @@ def f(x: list[float]) -> float:
 
 
 def f2(x: list[float]) -> float:
-    return abs(math.sin(x[0] * math.pi) - x[1]) + 0.01 * x[0]
+    return abs(math.sin(x[0] * math.pi) - x[1]) + 0.01 * x[0] ** 2
 
 
 def f3(x: list[float]) -> float:
-    return (math.sin(x[0] * math.pi) - x[1]) ** 2 + 0.01 * x[0]
+    return (math.sin(x[0] * math.pi) - x[1]) ** 2 + 0.01 * x[0] ** 2
 
 
 def dist(x: list[float], y: list[float], c: list[list[float]]) -> float:
