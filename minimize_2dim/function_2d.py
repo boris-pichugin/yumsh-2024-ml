@@ -23,7 +23,7 @@ for i in range(N):
 
 
 def f(x: list[float]) -> float:
-    return min(MZ[k] + dist(x, MX[k], MK[k]) for k in range(N))
+    return min(MZ[k] + dist(x, MX[k], MK[k]) for k in range(N)) + 0.005 * math.sin(x[0] * 100) * math.sin(x[1] * 100)
     # return min(MZ[k] + dist(x, MX[k], MK[k]) for k in range(N)) + math.sin(x[0]*x[1]*5)
 
 

@@ -7,9 +7,9 @@ import minimize_2dim.function_2d as fun2d
 
 
 def main() -> None:
-    fun2d.draw_2d_function(fun2d.f3)
+    fun2d.draw_2d_function(fun2d.f)
 
-    min_x = minimize_2d(fun2d.f3, tries=1)
+    min_x = minimize_2d(fun2d.f, tries=20)
     print(min_x)
     print(fun2d.f(min_x))
 
@@ -35,7 +35,7 @@ def minimize_2d_from_point(f: Callable[[list[float]], float], x: list[float], st
     v = [0 for _ in range(len(x))]
     for i in range(steps):
         g = grad(f, x)
-        v = linear_plus(0.8, v, 0.2, g)
+        v = linear_plus(0.6, v, 0.4, g)
         x = linear_plus(1.0, x, -0.01, v)
         path.append(x.copy())
 
