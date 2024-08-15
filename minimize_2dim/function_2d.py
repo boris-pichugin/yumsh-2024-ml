@@ -1,3 +1,4 @@
+import math
 import random
 from typing import Callable
 
@@ -24,6 +25,14 @@ for i in range(N):
 def f(x: list[float]) -> float:
     return min(MZ[k] + dist(x, MX[k], MK[k]) for k in range(N))
     # return min(MZ[k] + dist(x, MX[k], MK[k]) for k in range(N)) + math.sin(x[0]*x[1]*5)
+
+
+def f2(x: list[float]) -> float:
+    return abs(math.sin(x[0] * math.pi) - x[1]) + 0.01 * x[0]
+
+
+def f3(x: list[float]) -> float:
+    return (math.sin(x[0] * math.pi) - x[1]) ** 2 + 0.01 * x[0]
 
 
 def dist(x: list[float], y: list[float], c: list[list[float]]) -> float:
