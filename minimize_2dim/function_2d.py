@@ -46,16 +46,24 @@ def dist(x: list[float], y: list[float], c: list[list[float]]) -> float:
     return s
 
 
-def draw_2d_function(f: Callable[[list[float]], float]) -> None:
-    z = [[f([i / M, j / M]) for i in range(M + 1)] for j in range(M + 1)]
-    labels = [f"{i / M:.2f}" if i % 10 == 0 else None for i in range(M + 1)]
+def draw_2d_function(
+        f: Callable[[list[float]], float],
+        x0: float = 0, y0: float = 0,
+        x1: float = 1, y1: float = 1,
+        add_levels: bool = True
+) -> None:
+    z = [[f([x0 + i * (x1 - x0) / M, y0 + j * (y1 - y0) / M]) for i in range(M + 1)] for j in range(M + 1)]
+    labels_x = [f"{x0 + i * (x1 - x0) / M:.2f}" if i % 10 == 0 else None for i in range(M + 1)]
+    labels_y = [f"{y0 + i * (y1 - y0) / M:.2f}" if i % 10 == 0 else None for i in range(M + 1)]
 
-    sns.heatmap(z, xticklabels=labels, yticklabels=labels)
-    min_z = min(min(u) for u in z)
-    max_z = max(max(u) for u in z)
-    num_levels = 50
-    levels = [min_z + (max_z - min_z) * i / num_levels for i in range(0, num_levels + 1)]
-    plt.contour(z, colors=[(0.6, 0.6, 0.6)], levels=levels)
+    sns.heatmap(z, xticklabels=labels_x, yticklabels=labels_y)
+
+    if add_levels:
+        min_z = min(min(u) for u in z)
+        max_z = max(max(u) for u in z)
+        num_levels = 50
+        levels = [min_z + (max_z - min_z) * i / num_levels for i in range(0, num_levels + 1)]
+        plt.contour(z, colors=[(0.6, 0.6, 0.6)], levels=levels)
 
 
 def draw_path(path: list[list[float]]) -> None:
