@@ -31,23 +31,28 @@ def minimize_2d(f: Callable[[list[float]], float], tries: int = 20, steps: int =
     return min_x
 
 
-def minimize_2d_from_point(f: Callable[[list[float]], float], x: list[float], steps: int = 1000):
+def minimize_2d_from_point(
+        f: Callable[[list[float]], float],
+        x: list[float],
+        steps: int = 1000,
+        lr: float = 0.01,
+        beta_1: float = 0.9,
+        beta_2: float = 0.99,
+        epsilon: float = 0.01
+):
     path = [x.copy()]
-
-    lr = 0.01
-    beta_1 = 0.9
-    beta_2 = 0.99
-    epsilon = 0.01
 
     v = [0.0 for _ in range(len(x))]
     q = [1.0 for _ in range(len(x))]
-    for _ in range(steps):
+    for s in range(steps):
         g = grad(f, x)
         for i in range(len(x)):
             v[i] = beta_1 * v[i] + (1 - beta_1) * g[i]
             q[i] = beta_2 * q[i] + (1 - beta_2) * (v[i] ** 2)
             x[i] = x[i] - lr * v[i] / (epsilon + q[i] ** 0.5)
 
+        if (s + 1) % 100 == 0:
+            print(f"{s:10d} {f(x)}")
         path.append(x.copy())
 
     fun2d.draw_path(path)
